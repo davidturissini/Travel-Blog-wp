@@ -16,6 +16,7 @@ Tags: black, blue, white, two-columns, fixed-width, custom-header, custom-backgr
    body { height:100%; width: 100%; padding:0px; margin:0px; }
    div { margin:0px; padding:0px; }
    #map_canvas {
+    position:fixed !important;
     width:100%;
     height:100%;
    }
@@ -28,6 +29,48 @@ Tags: black, blue, white, two-columns, fixed-width, custom-header, custom-backgr
 
 #map_canvas .location-form {
  display:block;
+ }
+
+#location-html, #journal-entry-html {
+ display:none;
+ } 
+
+#blog-content {
+ position:fixed;
+ top:0px;
+ left:0px;
+ right:0px;
+ bottom:0px;
+ display:none;
+ padding:20px;
+ background:rgba(100, 100, 100, .5);
+ z-index:100;
+ }
+
+#blog-content .content {
+ background:#fff;
+ padding:10px;
+ overflow-y:scroll;
+ left: 20px;
+ bottom: 20px;
+ top: 20px;
+ right: 20px;
+ position:absolute;
+ }
+
+#blog-content .close {
+ display:block;
+ color:#00f;
+ cursor:pointer;
+ position: absolute;
+ top: 30px;
+ right: 40px;
+ z-index: 120;
+ font-size:12px;
+ }
+
+#blog-content .close:hover {
+ text-decoration:underline;
  }
 
 .location-form input[type=text] {
@@ -58,4 +101,16 @@ Tags: black, blue, white, two-columns, fixed-width, custom-header, custom-backgr
  right:0px;
  padding:5px;
  background:rgba(255, 255, 255, .5);
+ }
+
+.location h2 {
+ margin:0px;
+ }
+
+.location .geo {
+ margin:0px;
+ }
+
+.location .journal-entry .title {
+ font-size:16px;
  }

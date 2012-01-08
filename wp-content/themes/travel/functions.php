@@ -25,4 +25,69 @@
                 )
         );
   }
+
+  class Content {
+       public function __construct( $params = array() ) {
+         foreach($params as $key => $value) {
+           $this->$key = $value;
+         }
+         $custom = get_post_custom($this->ID);
+         foreach($custom as $key => $value) {
+           $this->$key = $value[0];
+         }
+       }
+
+       public function to_json () {
+         return json_encode( $this );
+       }
+ 
+  }
+
+  class JournalEntry extends Content {
+    public static function by_location($location, $options = array()) {
+      $options = array_merge($options, array(
+        'post_type' => 'journal_entry', 
+        'meta_key' => 'location_id', 
+        'meta_value' => $location->ID, 
+        'orderby' => "day", 
+        'order' => "ASC"
+      ));
+      $raw_entries = get_posts($options);
+      $entries = array();
+      foreach($raw_entries as $entry) {
+        $entries[] = new self($entry); 
+      }
+      return $entries;
+    }  
+   
+    public function __construct( $params = array() ) {
+      parent::__construct($params);
+      $this->formatted_day = date("l, F d, Y", strtotime($this->day));
+    }
+  }
+
+  class Location extends Content {
+    public static function all($options = array()) {
+      $options = array_merge(array('numberposts' => -1, 'post_type' => "location"), $options);
+      $raw_locations = get_posts( $options );
+      $locations = array();
+      foreach($raw_locations as $location) {
+        $loc = new self($location);
+        $locations[] = $loc;
+      }
+      return $locations;
+    }
+  
+    public function journal_entries( $options = array() ) {
+      $this->journal_entries = JournalEntry::by_location($this, $options);
+      return $this->journal_entries;
+      }
+  
+    public function to_json( $options = array() ) {
+      $this->journal_entries();
+      return parent::to_json($options);
+    }
+
+  }
+
 ?>

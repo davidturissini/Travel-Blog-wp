@@ -25,6 +25,40 @@ send_nosniff_header();
 
 do_action('admin_init');
 
+add_action('wp_ajax_save_location', 'save_location_callback');
+add_action('wp_ajax_save_journal_entry', 'save_journal_entry');
+
+function save_location_callback() {
+ global $wpdb;
+ if ( current_user_can('manage_options') ) {
+   $params = $_POST;
+   $title = $params['title'];
+   $city = $params['city'];
+   $country = $params['country'];
+   $lat = $params['lat'];
+   $lng = $params['lng'];
+   $has_visited = $params['has_visited'] == "true" ? 1 : 0;
+  
+   if( $title == "" ) { $title = sprintf("%s, %s", $city, $country); }
+  
+   $post_array = array(
+     'post_title' => $title,
+     'post_content' => "",
+     'post_status' => "publish",
+     'post_author' => 1,
+     'post_type' => "location"
+   );
+ 
+   $post_id =  wp_insert_post( $post_array );
+   update_post_meta($post_id, 'city', $city); 
+   update_post_meta($post_id, 'country', $country); 
+   update_post_meta($post_id, 'lat', $lat); 
+   update_post_meta($post_id, 'lng', $lng); 
+   update_post_meta($post_id, 'has_visited', $has_visited); 
+ }
+ exit;
+}
+
 if ( ! is_user_logged_in() ) {
 
 	if ( isset( $_POST['action'] ) && $_POST['action'] == 'autosave' ) {
@@ -1588,4 +1622,5 @@ default :
 	die('0');
 	break;
 endswitch;
+
 ?>

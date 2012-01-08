@@ -1,3 +1,27 @@
+  <div id="blog-content">
+    <a class="close">Return to map</a>
+    <div class="content">
+ 
+    </div>
+  </div>
+  <div id="location-html" class="location">
+    <h2 class="title"></h2>
+    <h5 class="geo">
+      <span class="city"></span>, <span class="country"></span>
+    </h5>
+    <div class="photos">
+ 
+    </div>
+    <div class="journal-entries">
+
+    </div>
+  </div>
+
+<div class="journal-entry" id="journal-entry-html">
+  <h3 class="day"></h3>
+  <div class="body"></div>
+</div>
+
 <?php if ( current_user_can('manage_options') ) { ?>
  <div id="edit-mode">
    <label for="edit-mode-checkbox">Edit mode?</label>
@@ -102,6 +126,7 @@
    }
   })
  </script>
+ <script src="/wp-content/themes/travel/jquery.lightbox-0.5.min.js"></script>
 <?php } ?>
 
 </body>
