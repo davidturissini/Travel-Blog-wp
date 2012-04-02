@@ -106,6 +106,7 @@
           $(".photos a", $blogContent).lightBox();
         }})
        $(".close", $blogContent).unbind("click").click(function () { $blogContent.css({display:"none"}) })
+       $(document).bind("keyup", function (e) { if(e.keyCode == 27) { $blogContent.css({display:"none"}); $(document).unbind("keyup") }  })
       })
     }
    <?php
