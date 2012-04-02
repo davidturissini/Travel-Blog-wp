@@ -5,9 +5,11 @@
        $.extend(loc, json)
        loc.has_visited = loc.has_visited == "1"
        loc.journal_entries = []
-       $.each(json.journal_entries, function (idx, e) {
-         loc.journal_entries.push(new JournalEntry(e));
-       })
+       if( json.journal_entries ) {
+         $.each(json.journal_entries, function (idx, e) {
+          loc.journal_entries.push(new JournalEntry(e));
+         })
+       }
 
        loc.title = loc.post_title;
 
@@ -36,18 +38,20 @@
            jsonpCallback:"jsonFlickrApi",
            success:function (e) {
              var photos = []
+             if( e.photoset ) {
              $.each(e.photoset.photo, function (idx, e) {
-               e.url = function () {
+                 e.url = function () {
                  return "http://farm" + e.farm + ".static.flickr.com/" + e.server + "/" + e.id + "_" + e.secret + ".jpg"
-               } 
-               e.thumbnail = function (size) { 
+                 } 
+                 e.thumbnail = function (size) { 
                  var ary = e.url().split("."),
                      index = ary.length - 2
-                 ary[index] = ary[index] + "_" + size
-                 return ary.join(".");
-               }
-               photos.push(e)
-             })
+                   ary[index] = ary[index] + "_" + size
+                   return ary.join(".");
+                 }
+                 photos.push(e)
+               })
+             }
              if( callbacks.success ) { callbacks.success(photos) }
            }
          })

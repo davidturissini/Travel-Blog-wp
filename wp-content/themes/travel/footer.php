@@ -73,11 +73,10 @@
          if( address ) {
           city = address.split(",")[0]
          }
-
      $("input[name='country']", $form).attr({value:country});
      $("input[name='city']", $form).attr({value:city});
-     $("input[name='lat']", $form).attr({value:mapEvent.latLng.Qa});
-     $("input[name='lng']", $form).attr({value:mapEvent.latLng.Ra});
+     $("input[name='lat']", $form).attr({value:mapEvent.latLng.Ta});
+     $("input[name='lng']", $form).attr({value:mapEvent.latLng.Ua});
 
      var marker = new google.maps.Marker({
        position: mapEvent.latLng, 
