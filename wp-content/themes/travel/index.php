@@ -76,7 +76,7 @@
 
    $(function () {
     var myOptions = {
-      zoom: 5,
+      zoom: 4,
       center: new google.maps.LatLng(47.608478,-122.33036),
       mapTypeId: google.maps.MapTypeId.HYBRID
     },
