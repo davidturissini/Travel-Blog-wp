@@ -81,8 +81,18 @@
       mapTypeId: google.maps.MapTypeId.HYBRID
     },
     infowindow = new google.maps.InfoWindow();
+    window.locations = []
+    window.findLocationByPostName = function (post_name) {
+      for(var i = 0; i < window.locations.length; i++) {
+       var l = window.locations[i]
+       if( l.post_name == post_name ) { 
+	return l 
+	}
+       }
+    }
     window.map = new google.maps.Map(document.getElementById('map_canvas'), myOptions);
     window.map.dropTravelLocation = function (loc) {
+      window.locations.push(loc)
       var markerHash = {
         position: new google.maps.LatLng(loc.lat, loc.lng),
         map: window.map,
@@ -93,7 +103,20 @@
       }
       var marker = new google.maps.Marker(markerHash) 
       google.maps.event.addListener(marker, "click", function (e) {
+       window.location.hash = loc.post_name
+      })
+    }
+
+    function hideLocation () {
+      window.location.hash = ""
+    }
+
+    function showLocation(loc) {
        var $blogContent = $( document.getElementById("blog-content") )
+       if( !loc ) { 
+        $blogContent.css({display:"none"})
+        return 
+       }
        $(".content", $blogContent).html( loc.blogHTML() )
        $blogContent.css({display:"block"})
        loc.photos({
@@ -105,10 +128,19 @@
           })
           $(".photos a", $blogContent).lightBox();
         }})
-       $(".close", $blogContent).unbind("click").click(function () { $blogContent.css({display:"none"}) })
-       $(document).bind("keyup", function (e) { if(e.keyCode == 27) { $blogContent.css({display:"none"}); $(document).unbind("keyup") }  })
-      })
-    }
+       $(".close", $blogContent).unbind("click").click(function () { 
+         hideLocation()
+       })
+       $(document).bind("keyup", function (e) { if(e.keyCode == 27) { 
+         hideLocation()
+         $(document).unbind("keyup") }  
+       })
+     }
+
+   $.address.change(function () {
+     showLocation(window.findLocationByPostName(window.location.hash.replace("#", "")))
+   })
+
    <?php
      foreach(Location::all() as $loc) { ?>
        window.map.dropTravelLocation(new Location(<?php echo $loc->to_json(); ?>));
