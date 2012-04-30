@@ -136,6 +136,9 @@
          hideLocation()
          $(document).unbind("keyup") }  
        })
+       if( !window.isStage() ) {
+       _gaq.push(["_trackEvent", "Location", "Viewed", loc.title])
+       }
      }
 
    jQuery.fn.extend({
