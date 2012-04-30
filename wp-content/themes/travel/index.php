@@ -122,11 +122,12 @@
        loc.photos({
         success:function (photos) { 
           $.each(photos, function(idx, photo) {
-            var $img = $( document.createElement("img") ).attr({src:photo.thumbnail("s")}),
-            $imgLink = $( document.createElement("a") ).attr({title:photo.title,href:photo.url()}).append( $img );
+            var $img = $( document.createElement("img") ).attr({src:photo.thumbnail("s"),height:"75px",width:"75px"}),
+            $imgLink = $( document.createElement("a") ).addClass("photo").attr({title:photo.title,href:photo.url()}).append( $img );
             $(".photos", $blogContent).append($imgLink);
           })
           $(".photos a", $blogContent).lightBox();
+          $(".photos", $blogContent).slider()
         }})
        $(".close", $blogContent).unbind("click").click(function () { 
          hideLocation()
@@ -136,6 +137,27 @@
          $(document).unbind("keyup") }  
        })
      }
+
+   jQuery.fn.extend({
+     slider: function () {
+       this.each(function (idx, elem) {
+         var width = elem.offsetWidth,
+         children = Array.prototype.slice.call(elem.children),
+         container = document.createElement("div"),
+         innerWidth = 0
+         elem.innerHTML = ""
+         elem.appendChild(container);
+         [].forEach.call(children, function (child) {
+           container.appendChild(child)
+           innerWidth += child.offsetWidth
+         }) 
+         if( innerWidth > elem.offsetWidth ) {
+           elem.style.overflowX = "scroll"
+         }
+         container.style.width = innerWidth + "px"
+       }) 
+     }
+   })
 
    $.address.change(function () {
      showLocation(window.findLocationByPostName(window.location.hash.replace("#", "")))

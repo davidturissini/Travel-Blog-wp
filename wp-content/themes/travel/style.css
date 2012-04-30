@@ -107,6 +107,18 @@ Tags: black, blue, white, two-columns, fixed-width, custom-header, custom-backgr
  margin:0px;
  }
 
+.location .photos {
+ padding:10px 0;
+ }
+
+.location .photos .photo {
+ display:inline-block;
+ padding-left:10px
+ }
+
+.location .photos .photo:first-child {
+ padding-left:0px;
+ }
 .location .geo {
  margin:0px;
  }
