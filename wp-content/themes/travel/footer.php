@@ -75,8 +75,8 @@
          }
      $("input[name='country']", $form).attr({value:country});
      $("input[name='city']", $form).attr({value:city});
-     $("input[name='lat']", $form).attr({value:mapEvent.latLng.Ta});
-     $("input[name='lng']", $form).attr({value:mapEvent.latLng.Ua});
+     $("input[name='lat']", $form).attr({value:mapEvent.latLng.lat()});
+     $("input[name='lng']", $form).attr({value:mapEvent.latLng.lng()});
 
      var marker = new google.maps.Marker({
        position: mapEvent.latLng, 
