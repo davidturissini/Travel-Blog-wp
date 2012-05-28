@@ -1,5 +1,6 @@
 <?php get_header(); ?>
   <script>
+
      function Location ( json ) {
        var loc = this
        $.extend(loc, json)
@@ -103,12 +104,12 @@
       }
       var marker = new google.maps.Marker(markerHash) 
       google.maps.event.addListener(marker, "click", function (e) {
-       window.location.hash = loc.post_name
+       window.router.navigate("/location/" + loc.post_name + "/", {trigger:true})
       })
     }
 
     function hideLocation () {
-      window.location.hash = ""
+      router.navigate("/", {trigger:true})
     }
 
     function showLocation(loc) {
@@ -141,30 +142,45 @@
        }
      }
 
-   jQuery.fn.extend({
-     slider: function () {
-       this.each(function (idx, elem) {
-         var width = elem.offsetWidth,
-         children = Array.prototype.slice.call(elem.children),
-         container = document.createElement("div"),
-         innerWidth = 0
-         elem.innerHTML = ""
-         elem.appendChild(container);
-         [].forEach.call(children, function (child) {
-           container.appendChild(child)
-           innerWidth += child.offsetWidth
+     jQuery.fn.extend({
+       slider: function () {
+         this.each(function (idx, elem) {
+           var width = elem.offsetWidth,
+           children = Array.prototype.slice.call(elem.children),
+           container = document.createElement("div"),
+           innerWidth = 0
+           elem.innerHTML = ""
+           elem.appendChild(container);
+           [].forEach.call(children, function (child) {
+             container.appendChild(child)
+             innerWidth += child.offsetWidth
+           }) 
+           if( innerWidth > elem.offsetWidth ) {
+             elem.style.overflowX = "scroll"
+           }
+           container.style.width = innerWidth + "px"
          }) 
-         if( innerWidth > elem.offsetWidth ) {
-           elem.style.overflowX = "scroll"
-         }
-         container.style.width = innerWidth + "px"
-       }) 
-     }
-   })
+       }
+     })
 
-   $.address.change(function () {
-     showLocation(window.findLocationByPostName(window.location.hash.replace("#", "")))
-   })
+     $(function () {
+     var LocationRouter = Backbone.Router.extend({
+       routes:{
+         "location/:location/":"locationShow",
+         "":"root"
+         },
+       root:function () {
+         showLocation(null) 
+       },
+       locationShow:function(e) { 
+         var location = window.findLocationByPostName(e) 
+         showLocation(location)
+       }
+     })
+     router = new LocationRouter()
+
+     Backbone.history.start({pushState:true})
+     })
 
    <?php
      foreach(Location::all() as $loc) { ?>
