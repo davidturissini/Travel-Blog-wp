@@ -79,12 +79,13 @@
     }
   
     public function journal_entries( $options = array() ) {
-      $this->journal_entries = JournalEntry::by_location($this, $options);
+      if( !$this->journal_entries ) {
+        $this->journal_entries = JournalEntry::by_location($this, $options);
+      }
       return $this->journal_entries;
       }
   
     public function to_json( $options = array() ) {
-      $this->journal_entries();
       return parent::to_json($options);
     }
 

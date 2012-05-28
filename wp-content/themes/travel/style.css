@@ -14,7 +14,12 @@ Tags: black, blue, white, two-columns, fixed-width, custom-header, custom-backgr
    }
   
    body { height:100%; width: 100%; padding:0px; margin:0px; }
-   div { margin:0px; padding:0px; }
+   div,ul,li,nav,header,h1,h2,h3,h4,h5,h6 { margin:0px; padding:0px; }
+   li { list-style-type:none; }
+   a,a:visited,a:hover { 
+    text-decoration:none;
+    color:#00f; 
+   }
    #map_canvas {
     position:fixed !important;
     width:100%;
@@ -51,7 +56,7 @@ Tags: black, blue, white, two-columns, fixed-width, custom-header, custom-backgr
  background:#fff;
  padding:10px;
  overflow-y:scroll;
- left: 20px;
+ left: 90px;
  bottom: 20px;
  top: 20px;
  right: 20px;
@@ -125,4 +130,19 @@ Tags: black, blue, white, two-columns, fixed-width, custom-header, custom-backgr
 
 .location .journal-entry .title {
  font-size:16px;
+ }
+
+#locations-nav {
+ position:fixed;
+ right:0px;
+ top:50px;
+ width:150px;
+ background:rgba(255,255,255,.9);
+ padding:5px;
+ }
+
+#locations-nav a {
+ display:block;
+ font-size:12px;
+ padding:5px;
  }
