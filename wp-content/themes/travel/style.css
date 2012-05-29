@@ -13,7 +13,7 @@ Tags: black, blue, white, two-columns, fixed-width, custom-header, custom-backgr
     height:100%;
    }
   
-   body { height:100%; width: 100%; padding:0px; margin:0px; }
+   body { height:100%; width: 100%; padding:0px; margin:0px;font-family:Arial; }
    div,ul,li,nav,header,h1,h2,h3,h4,h5,h6 { margin:0px; padding:0px; }
    li { list-style-type:none; }
    a,a:visited,a:hover { 
@@ -111,6 +111,11 @@ Tags: black, blue, white, two-columns, fixed-width, custom-header, custom-backgr
  margin:0px;
  }
 
+.location .description {
+ margin:10px 0;
+ font-size:12px;
+ }
+
 .location .photos {
  padding:10px 0;
  }
@@ -145,19 +150,29 @@ Tags: black, blue, white, two-columns, fixed-width, custom-header, custom-backgr
  position:fixed;
  right:5px;
  top:50px;
- width:150px;
+ width:160px;
  background:rgba(255,255,255,.9);
- padding:5px;
  }
 
-#locations-nav a {
+#locations-nav .location {
  display:block;
- font-size:12px;
- padding:5px;
+ font-size:11px;
+ padding:5px 10px;
  -webkit-transition:all linear 500ms;
  }
 
-#locations-nav a:hover, #locations-nav .selected {
- background:#004430;
+#locations-nav .location.not-visited:hover, #locations-nav .location.selected.not-visited {
+ color:#ccc;
+ background:#888;
+ }
+
+#locations-nav .location.not-visited {
+ color:#ccc;
+ background:#B0B0B0;
+ }
+
+#locations-nav .location:hover, #locations-nav .location.selected {
+ background:#003044;
  color:#ccc;
  }
+

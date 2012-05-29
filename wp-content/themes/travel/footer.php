@@ -9,6 +9,7 @@
     <h5 class="geo">
       <span class="city"></span>, <span class="country"></span>
     </h5>
+    <div class="description"></div>
     <div class="photos">
  
     </div>

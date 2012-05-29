@@ -118,8 +118,8 @@
       $(".title", $div).text(loc.get("post_title"));
       $(".city", $div).text(loc.get("city"));
       $(".country", $div).text(loc.get("country"));
+      $(".description", $div).text(loc.get("post_content"))
       $content.append($div)
-      
       view.showPhotos() 
 
       loc.journal_entries({
@@ -324,7 +324,7 @@
    <?php
      foreach(Location::all() as $loc) { ?>
        <li>
-        <a class="location" data-json='<?php echo $loc->to_json(); ?>' href="/"><?php echo $loc->city; ?>, <?php echo $loc->country; ?></a>
+        <a class="location<?php if( $loc->has_visited == 0 ) { echo " not-visited"; } ?>" data-json='<?php echo $loc->to_json(); ?>' href="/"><?php echo $loc->city; ?>, <?php echo $loc->country; ?></a>
        </li>
        <?php } 
      ?>
