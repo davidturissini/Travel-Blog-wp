@@ -4,22 +4,19 @@
  
     </div>
   </div>
-  <?php $location = new Location($post); ?>
   <article id="location-html" class="location">
-    <h2 class="title"><?php echo $post->post_title ?></h2>
+    <h2 class="title"><h2>
     <h5 class="geo">
-      <span class="city"><?php echo $location->city; ?></span>, <span class="country"><?php echo $location->country; ?></span>
+      <span class="city"></span>, <span class="country"></span>
     </h5>
     <div class="photos">
  
     </div>
     <div class="journal-entries">
-     <?php foreach($location->journal_entries() as $key=>$entry) { ?>
-      <article class="journal-entry"<?php if($key==0) { echo 'id="journal-entry-html"'; } ?>>
-       <h3 class="day"><?php echo $entry->day; ?></h3>
-       <div class="body"><?php echo $entry->post_content; ?></div>
+      <article class="journal-entry" id="journal-entry-html">
+       <h3 class="day"></h3>
+       <div class="body"></div>
       </article>
-     <?php } ?>
     </div>
   </article>
 

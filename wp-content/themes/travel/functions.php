@@ -78,16 +78,6 @@
       return $locations;
     }
 
-    public static function find_by_slug($slug) {
-      $raw = get_posts(array('numberposts' => -1, 'post_type' => "location", 'slug' => $slug));
-      $raw = $raw[0];
-      if( $raw ) {
-       return new self($raw);
-      } else {
-       return null;
-      }
-    }
-  
     public static function find($id) {
       $raw_location = get_post( $id );
       return new self($raw_location);
