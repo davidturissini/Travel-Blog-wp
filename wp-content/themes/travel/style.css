@@ -18,7 +18,7 @@ Tags: black, blue, white, two-columns, fixed-width, custom-header, custom-backgr
    li { list-style-type:none; }
    a,a:visited,a:hover { 
     text-decoration:none;
-    color:#00f; 
+    color:#003388; 
    }
    #map_canvas {
     position:fixed !important;
@@ -128,6 +128,10 @@ Tags: black, blue, white, two-columns, fixed-width, custom-header, custom-backgr
  margin:0px;
  }
 
+.location .journal-entries {
+ margin-top:20px;
+ }
+
 .location .journal-entry {
  margin-bottom:20px;
  }
@@ -154,6 +158,6 @@ Tags: black, blue, white, two-columns, fixed-width, custom-header, custom-backgr
  }
 
 #locations-nav a:hover, #locations-nav .selected {
- background:green;
+ background:#004430;
  color:#ccc;
  }

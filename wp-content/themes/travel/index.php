@@ -324,7 +324,7 @@
    <?php
      foreach(Location::all() as $loc) { ?>
        <li>
-        <a class="location" data-json='<?php echo $loc->to_json(); ?>' href="/"><?php echo $loc->post_title; ?></a>
+        <a class="location" data-json='<?php echo $loc->to_json(); ?>' href="/"><?php echo $loc->city; ?>, <?php echo $loc->country; ?></a>
        </li>
        <?php } 
      ?>
