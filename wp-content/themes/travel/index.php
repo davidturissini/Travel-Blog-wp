@@ -6,16 +6,15 @@
       "":"root"
      },
      root:function () {
-       window.locationView.hide()
+       window.map.hideLocation()
      },
      locationShow:function(e) { 
       var location = window.map.locations.where({post_name:e})[0]
-      window.locationView.hide(location)
       map.focusLocation(location)
      },
-     navigateToLocation: function(location) {
-      if( location ) {
-       this.navigate("/" + location.get("post_type") + "/" + location.get("post_name") + "/", {trigger:true})
+     navigateToLocation: function(loc) {
+      if( loc ) {
+       this.navigate("/" + loc.get("post_type") + "/" + loc.get("post_name") + "/", {trigger:true})
       } else {
        this.navigate("/", {trigger:true})
       }
@@ -28,17 +27,24 @@
        $locations = $( this.el.getElementsByClassName("location") )
        map.on("locationChanged", function (event) {
         var location = event.location
-        var $loc = $locations.filter(function (idx, e) { 
-         return location.get("ID") == $(e).data().json.ID  
-        }).first()
         $locations.removeClass("selected")
-        $loc.addClass("selected")
+        if( location ) { 
+         var $loc = $locations.filter(function (idx, e) { 
+          return location.get("ID") == $(e).data().json.ID  
+         }).first()
+         $loc.addClass("selected")
+        }
        }) 
 
        $locations.click(function (e) {
         e.preventDefault()
-        var location = map.locations.where({ID:$(e.currentTarget).data().json.ID})[0] 
-        map.router.navigateToLocation(location)
+        var $target = $(e.currentTarget)
+        if( !$target.hasClass("selected") ) {
+         var location = map.locations.where({ID:$target.data().json.ID})[0] 
+         map.router.navigateToLocation(location)
+        } else {
+         map.router.navigateToLocation(null) 
+        }
        })
       }
     })
@@ -74,35 +80,9 @@
          $(".journal-entries", locView.el).append(journalView.render())
        })
      },
-     render: function () {
-      var view = this,
-      loc = this.model,
-      $div = $( document.getElementById("location-html") ).clone().attr({id:null}),
-      $content = $(".content", view.el)
-      $content.empty()
-      $(".title", $div).text(loc.get("post_title"));
-      $(".city", $div).text(loc.get("city"));
-      $(".country", $div).text(loc.get("country"));
-      $content.append($div)
-
+     showHTML: function () {
+      var view = this
       this.$el.css({display:"block"})
-      loc.photos({
-       success:function (photos) { 
-        $.each(photos, function(idx, photo) {
-        var $img = $( document.createElement("img") ).attr({src:photo.thumbnail("s"),height:"75px",width:"75px"}),
-        $imgLink = $( document.createElement("a") ).addClass("photo").attr({title:photo.title,href:photo.url()}).append( $img );
-        $(".photos", view.$el).append($imgLink);
-       })
-       $(".photos a", view.$el).lightBox();
-       $(".photos", view.$el).slider()
-      }})
-
-      loc.journal_entries({
-       success:function (entries) {
-        view.renderJournalEntries(entries)
-       }
-      })
-
       $(".close", view.$el).unbind("click").click(function () { 
        window.map.router.navigateToLocation(null)
       })
@@ -113,6 +93,41 @@
       if( !window.isStage() ) {
        _gaq.push(["_trackEvent", "Location", "Viewed", loc.title])
       }
+     },
+     showPhotos: function () {
+      var view = this
+      this.model.photos({
+       success:function (photos) { 
+        $.each(photos, function(idx, photo) {
+        var $img = $( document.createElement("img") ).attr({src:photo.thumbnail("s"),height:"75px",width:"75px"}),
+        $imgLink = $( document.createElement("a") ).addClass("photo").attr({title:photo.title,href:photo.url()}).append( $img );
+        $(".photos", view.$el).append($imgLink);
+       })
+       $(".photos a", view.$el).lightBox();
+       $(".photos", view.$el).slider()
+      }})
+ 
+     },
+     render: function () {
+      var view = this,
+      loc = this.model,
+      options = options || {},
+      $div = $( document.getElementById("location-html") ).clone().attr({id:null}),
+      $content = $(".content", view.el)
+      $content.empty()
+      $(".title", $div).text(loc.get("post_title"));
+      $(".city", $div).text(loc.get("city"));
+      $(".country", $div).text(loc.get("country"));
+      $content.append($div)
+      
+      view.showPhotos() 
+
+      loc.journal_entries({
+       success:function (entries) {
+        view.renderJournalEntries(entries)
+       }
+      })
+      view.showHTML()
      }
     })
 
@@ -218,6 +233,10 @@
      this.locations.push(location)
      this.drawMarker(location)
     },
+    hideLocation: function () {
+      window.locationView.hide()
+      this.locations.setSelected(null)
+    },
     focusLocation: function (location) {
       var map = this,
       eventHandler = google.maps.event.addListener(map.map, "idle", mapIdle)
@@ -268,7 +287,7 @@
     
     window.locationView = new LocationShowView({
      el:document.getElementById("blog-content")
-    }) 
+    })
 
     Backbone.history.start({pushState:true})
      
@@ -304,9 +323,7 @@
    <?php
      foreach(Location::all() as $loc) { ?>
        <li>
-         <article data-json='<?php echo $loc->to_json(); ?>' class="location">
-           <a href="/"><?php echo $loc->post_title; ?></a>
-         </article>
+        <a class="location" data-json='<?php echo $loc->to_json(); ?>' href="/"><?php echo $loc->post_title; ?></a>
        </li>
        <?php } 
      ?>

@@ -43,9 +43,9 @@ Tags: black, blue, white, two-columns, fixed-width, custom-header, custom-backgr
 #blog-content {
  position:fixed;
  top:0px;
- left:70px;
- right:180px;
- bottom:0px;
+ left:60px;
+ right:175px;
+ bottom:10px;
  display:none;
  padding:20px;
  z-index:100;
@@ -139,7 +139,7 @@ Tags: black, blue, white, two-columns, fixed-width, custom-header, custom-backgr
 
 #locations-nav {
  position:fixed;
- right:0px;
+ right:5px;
  top:50px;
  width:150px;
  background:rgba(255,255,255,.9);
@@ -153,7 +153,7 @@ Tags: black, blue, white, two-columns, fixed-width, custom-header, custom-backgr
  -webkit-transition:all linear 500ms;
  }
 
-#locations-nav a:hover, #locations-nav .selected a {
+#locations-nav a:hover, #locations-nav .selected {
  background:green;
  color:#ccc;
  }

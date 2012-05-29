@@ -27,6 +27,7 @@ do_action('admin_init');
 add_action('wp_ajax_save_location', 'save_location_callback');
 add_action('wp_ajax_save_journal_entry', 'save_journal_entry');
 add_action('wp_ajax_journal_from_location', 'journal_from_location');
+add_action('wp_ajax_nopriv_journal_from_location', 'journal_from_location');
 
 function journal_from_location() {
  $location = Location::find( $_GET['location_id'] );
