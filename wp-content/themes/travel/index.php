@@ -1,6 +1,5 @@
 <?php get_header(); ?>
   <script>
-
     var LocationRouter = Backbone.Router.extend({
      routes:{
       "location/:location/":"locationShow",
@@ -11,60 +10,140 @@
      },
      locationShow:function(e) { 
       var location = window.map.locations.where({post_name:e})[0]
-      window.locationView.show(location)
+      window.locationView.hide(location)
+      map.focusLocation(location)
+     },
+     navigateToLocation: function(location) {
+      if( location ) {
+       this.navigate("/" + location.get("post_type") + "/" + location.get("post_name") + "/", {trigger:true})
+      } else {
+       this.navigate("/", {trigger:true})
+      }
      }
     })
-    window.router = new LocationRouter()
+
+    var LocationMenu = Backbone.View.extend({
+      render:function () {
+       var map = this.options.map,
+       $locations = $( this.el.getElementsByClassName("location") )
+       map.on("locationChanged", function (event) {
+        var location = event.location
+        var $loc = $locations.filter(function (idx, e) { 
+         return location.get("ID") == $(e).data().json.ID  
+        }).first()
+        $locations.removeClass("selected")
+        $loc.addClass("selected")
+       }) 
+
+       $locations.click(function (e) {
+        e.preventDefault()
+        var location = map.locations.where({ID:$(e.currentTarget).data().json.ID})[0] 
+        map.router.navigateToLocation(location)
+       })
+      }
+    })
+
+    var JournalEntryView = Backbone.View.extend({
+      model:JournalEntry,
+      render: function () {
+       var journal = this,
+       $div = $( document.getElementById("journal-entry-html") ).clone().attr({id:null})
+       $(".title", $div).html(journal.model.get("post_title"));
+       $(".day", $div).html(journal.model.get("formatted_day"));
+       $(".body", $div).html(journal.model.get("post_content"));
+       return $div.get(0);
+      }
+    })
 
     var LocationShowView = Backbone.View.extend({
      model: Location,
+     initialize: function () {
+       this.journalView = new JournalEntryView()
+     },
      show:function (location) {
       this.model = location
       this.render()
-    },
-    hide:function () {
+     },
+     hide:function () {
       this.$el.css({display:"none"})
-    },
-    render: function () {
-     var view = this,
-     loc = this.model,
-     $div = $( document.getElementById("location-html") ).clone().attr({id:null})
-     $(".title", $div).text(loc.get("post_title"));
-     $(".city", $div).text(loc.get("city"));
-     $(".country", $div).text(loc.get("country"));
+     },
+     renderJournalEntries:function (entries) {
+       var locView = this
+       entries.forEach(function(entry, idx) {
+         var journalView = new JournalEntryView({model:entry})
+         $(".journal-entries", locView.el).append(journalView.render())
+       })
+     },
+     render: function () {
+      var view = this,
+      loc = this.model,
+      $div = $( document.getElementById("location-html") ).clone().attr({id:null}),
+      $content = $(".content", view.el)
+      $content.empty()
+      $(".title", $div).text(loc.get("post_title"));
+      $(".city", $div).text(loc.get("city"));
+      $(".country", $div).text(loc.get("country"));
+      $content.append($div)
 
-     $(".content", view.$el).html( "test" )
-     this.$el.css({display:"block"})
-     loc.photos({
-      success:function (photos) { 
-       $.each(photos, function(idx, photo) {
-       var $img = $( document.createElement("img") ).attr({src:photo.thumbnail("s"),height:"75px",width:"75px"}),
-       $imgLink = $( document.createElement("a") ).addClass("photo").attr({title:photo.title,href:photo.url()}).append( $img );
-       $(".photos", view.$el).append($imgLink);
+      this.$el.css({display:"block"})
+      loc.photos({
+       success:function (photos) { 
+        $.each(photos, function(idx, photo) {
+        var $img = $( document.createElement("img") ).attr({src:photo.thumbnail("s"),height:"75px",width:"75px"}),
+        $imgLink = $( document.createElement("a") ).addClass("photo").attr({title:photo.title,href:photo.url()}).append( $img );
+        $(".photos", view.$el).append($imgLink);
+       })
+       $(".photos a", view.$el).lightBox();
+       $(".photos", view.$el).slider()
+      }})
+
+      loc.journal_entries({
+       success:function (entries) {
+        view.renderJournalEntries(entries)
+       }
       })
-      $(".photos a", view.$el).lightBox();
-      $(".photos", view.$el).slider()
-     }})
-     $(".close", view.$el).unbind("click").click(function () { 
-      hideLocation()
-     })
-     $(document).bind("keyup", function (e) { if(e.keyCode == 27) { 
-      hideLocation()
-      $(document).unbind("keyup") }  
-     })
-     if( !window.isStage() ) {
-      _gaq.push(["_trackEvent", "Location", "Viewed", loc.title])
+
+      $(".close", view.$el).unbind("click").click(function () { 
+       window.map.router.navigateToLocation(null)
+      })
+      $(document).bind("keyup", function (e) { if(e.keyCode == 27) { 
+       window.map.router.navigateToLocation(null)
+       $(document).unbind("keyup") }  
+      })
+      if( !window.isStage() ) {
+       _gaq.push(["_trackEvent", "Location", "Viewed", loc.title])
+      }
      }
-    }
-   })
+    })
 
      var Location = Backbone.Model.extend({
        initialize: function (json) {
         this.has_visited = json.has_visited == "1"
        },
        journal_entries: function ( callbacks ) {
+         var loc = this
          callbacks = callbacks || {}
-         return "asd"
+         if(!loc._journal_entries) {
+           loc._journal_entries = []
+         $.ajax({
+           url: "/wp-admin/admin-ajax.php",
+           data: {
+             action:"journal_from_location",
+             location_id:loc.get("ID")
+           },
+           success: function (e) {
+            $.each(JSON.parse(e), function (idx, json) {
+              loc._journal_entries.push(new JournalEntry(json))
+            })
+            if( callbacks.success ) { callbacks.success(loc._journal_entries) }
+           },
+           error: function () {
+ 
+           }
+         })
+         } else {
+           if( callbacks.success ) { callbacks.success(loc._journal_entries) }
+         }
        },
        photos: function( callbacks ) {
          var loc = this
@@ -101,37 +180,35 @@
        }
      })
 
-     function JournalEntry(json) {
-       var entry = this
-         
-       entry.blogHTML = function () {
-         var $div = $( document.getElementById("journal-entry-html") ).clone().attr({id:null})
-         $(".title", $div).html(json.post_title);
-         $(".day", $div).html(json.formatted_day);
-         $(".body", $div).html(json.post_content);
-         return $div.get(0);
+     var JournalEntry = Backbone.Model.extend({
+       blogHTML: function () {
        }
-
-       return entry;
-     }
-
-    function hideLocation () {
-      window.router.navigate("/", {trigger:true})
-    }
+     })
 
    var LocationsCollection = Backbone.Collection.extend({
-    model:Location
+    model:Location,
+    initialize:function () {
+      this.selected = null
+    },
+    setSelected: function (location) {
+      this.selected = location
+      this.trigger("selectedChange", {location:location})
+    }
    })
 
    var Map = Backbone.View.extend({
     model:Location,
     initialize: function (e) {
-      var map = this
-      map.options = e.options
-      map.locations = new LocationsCollection()
-      map.locations.on("add", function (location) {
-        map.drawMarker(location)
-      })
+     var map = this
+     map.options = e.options
+     map.router = new LocationRouter()
+     map.locations = new LocationsCollection()
+     map.locations.on("add", function (location) {
+      map.drawMarker(location)
+     })
+     map.locations.on("selectedChange", function (event) {
+      map.trigger("locationChanged", {location:event.location}) 
+     })
     },
     render: function () {
      this.map = new google.maps.Map(this.el, this.options);
@@ -141,19 +218,31 @@
      this.locations.push(location)
      this.drawMarker(location)
     },
+    focusLocation: function (location) {
+      var map = this,
+      eventHandler = google.maps.event.addListener(map.map, "idle", mapIdle)
+      function mapIdle() {
+       eventHandler.remove()
+       setTimeout(function () {
+        window.locationView.show(location)
+       }, 500)
+      }
+      map.map.panTo( new google.maps.LatLng(location.get("lat"), location.get("lng")) )
+      map.locations.setSelected(location) 
+    },
     drawMarker: function(location) {
      var markerHash = {
-        position: new google.maps.LatLng(location.get("lat"), location.get("lng")),
-        map: this.map,
-        title: location.get("post_title")
-      }
-      if( !location.has_visited ) {
-        markerHash.icon = "http://eric.lubow.org/wp-content/uploads/2009/12/gmap_blue_icon.png" 
-      }
-      var marker = new google.maps.Marker(markerHash) 
-      google.maps.event.addListener(marker, "click", function (e) {
-       window.router.navigate("/" + location.get("post_type") + "/" + location.get("post_name") + "/", {trigger:true})
-      })
+      position: new google.maps.LatLng(location.get("lat"), location.get("lng")),
+      map: this.map,
+      title: location.get("post_title")
+     }
+     if( !location.has_visited ) {
+      markerHash.icon = "http://eric.lubow.org/wp-content/uploads/2009/12/gmap_blue_icon.png" 
+     }
+     var marker = new google.maps.Marker(markerHash) 
+     google.maps.event.addListener(marker, "click", function (e) {
+       map.router.navigateToLocation(location)
+     })
     }
    })
 
@@ -171,6 +260,11 @@
      var location = new Location( $(elem).data("json") )
      window.map.addLocation(location)
     })
+
+    new LocationMenu({
+     el:document.getElementById("locations-nav"),
+     map:window.map
+    }).render()
     
     window.locationView = new LocationShowView({
      el:document.getElementById("blog-content")

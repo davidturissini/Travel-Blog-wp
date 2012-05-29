@@ -78,6 +78,11 @@
       return $locations;
     }
   
+    public static function find($id) {
+      $raw_location = get_post( $id );
+      return new self($raw_location);
+    }
+  
     public function journal_entries( $options = array() ) {
       if( !$this->journal_entries ) {
         $this->journal_entries = JournalEntry::by_location($this, $options);

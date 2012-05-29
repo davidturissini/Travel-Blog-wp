@@ -43,12 +43,11 @@ Tags: black, blue, white, two-columns, fixed-width, custom-header, custom-backgr
 #blog-content {
  position:fixed;
  top:0px;
- left:0px;
- right:0px;
+ left:70px;
+ right:180px;
  bottom:0px;
  display:none;
  padding:20px;
- background:rgba(100, 100, 100, .5);
  z-index:100;
  }
 
@@ -56,10 +55,10 @@ Tags: black, blue, white, two-columns, fixed-width, custom-header, custom-backgr
  background:#fff;
  padding:10px;
  overflow-y:scroll;
- left: 90px;
+ left: 20px;
  bottom: 20px;
  top: 20px;
- right: 20px;
+ right: 0px;
  position:absolute;
  }
 
@@ -124,12 +123,18 @@ Tags: black, blue, white, two-columns, fixed-width, custom-header, custom-backgr
 .location .photos .photo:first-child {
  padding-left:0px;
  }
+
 .location .geo {
  margin:0px;
  }
 
-.location .journal-entry .title {
+.location .journal-entry {
+ margin-bottom:20px;
+ }
+
+.location .journal-entry .day {
  font-size:16px;
+ margin-bottom:5px;
  }
 
 #locations-nav {
@@ -145,4 +150,10 @@ Tags: black, blue, white, two-columns, fixed-width, custom-header, custom-backgr
  display:block;
  font-size:12px;
  padding:5px;
+ -webkit-transition:all linear 500ms;
+ }
+
+#locations-nav a:hover, #locations-nav .selected a {
+ background:green;
+ color:#ccc;
  }

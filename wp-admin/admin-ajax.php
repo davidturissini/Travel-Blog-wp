@@ -13,7 +13,6 @@
  */
 define('DOING_AJAX', true);
 define('WP_ADMIN', true);
-
 if ( ! isset( $_REQUEST['action'] ) )
 	die('-1');
 
@@ -27,6 +26,13 @@ do_action('admin_init');
 
 add_action('wp_ajax_save_location', 'save_location_callback');
 add_action('wp_ajax_save_journal_entry', 'save_journal_entry');
+add_action('wp_ajax_journal_from_location', 'journal_from_location');
+
+function journal_from_location() {
+ $location = Location::find( $_GET['location_id'] );
+ print_r( json_encode( $location->journal_entries() ) );
+ exit;
+ }
 
 function save_location_callback() {
  global $wpdb;
@@ -63,7 +69,6 @@ if ( ! is_user_logged_in() ) {
 
 	if ( isset( $_POST['action'] ) && $_POST['action'] == 'autosave' ) {
 		$id = isset($_POST['post_ID'])? (int) $_POST['post_ID'] : 0;
-
 		if ( ! $id )
 			die('-1');
 
@@ -78,7 +83,6 @@ if ( ! is_user_logged_in() ) {
 
 	if ( !empty( $_REQUEST['action'] ) )
 		do_action( 'wp_ajax_nopriv_' . $_REQUEST['action'] );
-
 	die('-1');
 }
 
