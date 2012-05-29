@@ -240,6 +240,7 @@
     focusLocation: function (location) {
       var map = this,
       eventHandler = google.maps.event.addListener(map.map, "idle", mapIdle)
+      window.locationView.hide()
       function mapIdle() {
        eventHandler.remove()
        setTimeout(function () {
