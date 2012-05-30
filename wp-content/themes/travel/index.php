@@ -247,7 +247,16 @@
         window.locationView.show(location)
        }, 500)
       }
-      map.map.panTo( new google.maps.LatLng(location.get("lat"), location.get("lng")) )
+      var currentCenterLng = Math.round(map.map.center.lng, 4),
+       currentCenterLat = Math.round(map.map.center.lat(), 4),
+       currentCenterLng = Math.round(map.map.center.lng(), 4),
+       locLat = Math.round(location.get("lat"), 4),
+       locLng = Math.round(location.get("lng"), 4)
+     if(locLat != currentCenterLat || locLng != currentCenterLng) {
+       map.map.panTo( new google.maps.LatLng(location.get("lat"), location.get("lng")) )
+      } else {
+       window.locationView.show(location)
+      }
       map.locations.setSelected(location) 
     },
     drawMarker: function(location) {
