@@ -91,7 +91,7 @@
        $(document).unbind("keyup") }  
       })
       if( !window.isStage() ) {
-       _gaq.push(["_trackEvent", "Location", "Viewed", loc.title])
+       _gaq.push(["_trackEvent", "Location", "Viewed", view.model.get("post_title")])
       }
      },
      showPhotos: function () {
