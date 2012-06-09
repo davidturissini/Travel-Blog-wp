@@ -245,14 +245,20 @@
        eventHandler.remove()
        setTimeout(function () {
         window.locationView.show(location)
-       }, 500)
+       }, 700)
+       
       }
       var currentCenterLng = Math.round(map.map.center.lng, 4),
        currentCenterLat = Math.round(map.map.center.lat(), 4),
        currentCenterLng = Math.round(map.map.center.lng(), 4),
        locLat = Math.round(location.get("lat"), 4),
        locLng = Math.round(location.get("lng"), 4)
+
      if(locLat != currentCenterLat || locLng != currentCenterLng) {
+      var zoomLevel = 10
+      if( window.map.map.zoom < zoomLevel ) {
+       window.map.map.setZoom(zoomLevel)
+      }
        map.map.panTo( new google.maps.LatLng(location.get("lat"), location.get("lng")) )
       } else {
        window.locationView.show(location)
