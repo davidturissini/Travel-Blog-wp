@@ -280,8 +280,8 @@
     window.map = new Map({
      el:document.getElementById('map_canvas'), 
      options: {
-      zoom: 5,
-      center: new google.maps.LatLng(47.608478,-122.33036),
+      zoom: 4,
+      center: new google.maps.LatLng(41.08193934195916,-93.67801624999997),
       mapTypeId: google.maps.MapTypeId.HYBRID
     }}).render()
 
