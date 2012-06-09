@@ -41,14 +41,13 @@
  </div>
  <script>
   $(function () {
-  
    $( document.getElementById("edit-mode-checkbox") ).change(function (e) {
     if(e.target.checked) { editMode() } else { stopEditMode() }
    })
   
    function editMode() {
      var $formDiv = $( document.getElementById("location-form") )
-     google.maps.event.addListener(window.map, 'click', function (mapEvent) {
+     google.maps.event.addListener(window.map.map, 'click', function (mapEvent) {
      var $form = $formDiv.clone(),
      formId = "location-" + new Date().getTime()
      $("form", $form).attr({id:formId})
@@ -80,14 +79,14 @@
 
      var marker = new google.maps.Marker({
        position: mapEvent.latLng, 
-       map: map,
+       map: window.map.map,
        title:"Hello World!"
      }),
      infowindow = new google.maps.InfoWindow(
        { content: $form.html(),
          size: new google.maps.Size(50,50)
        });
-     infowindow.open(window.map,marker);
+     infowindow.open(window.map.map,marker);
      google.maps.event.addListener( infowindow, "domready", function () {
      var $form = $( document.getElementById(formId) )
      $form.submit(function (e) { 
@@ -108,7 +107,7 @@
            success:function(e) { 
             infowindow.close() 
             marker.setMap(null);
-            window.map.dropTravelLocation(new Location(dataHash));
+            window.map.addLocation(new Location(dataHash));
            }
          })
        })
@@ -121,7 +120,7 @@
    }
 
    function stopEditMode() {
-    google.maps.event.clearListeners(window.map, 'click') 
+    google.maps.event.clearListeners(window.map.map, 'click') 
    }
   })
  </script>
