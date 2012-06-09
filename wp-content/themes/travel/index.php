@@ -329,9 +329,20 @@
   
   </div> 
   <nav id="locations-nav">
+   <header>Places visited</header>
    <ul>
    <?php
-     foreach(Location::all() as $loc) { ?>
+     foreach(Location::visited() as $loc) { ?>
+       <li>
+        <a class="location<?php if( $loc->has_visited == 0 ) { echo " not-visited"; } ?>" data-json='<?php echo $loc->to_json(); ?>' href="/"><?php echo $loc->city; ?>, <?php echo $loc->country; ?></a>
+       </li>
+       <?php } 
+     ?>
+   </ul>
+   <header>Upcoming trips</header>
+   <ul>
+   <?php
+     foreach(Location::non_visited() as $loc) { ?>
        <li>
         <a class="location<?php if( $loc->has_visited == 0 ) { echo " not-visited"; } ?>" data-json='<?php echo $loc->to_json(); ?>' href="/"><?php echo $loc->city; ?>, <?php echo $loc->country; ?></a>
        </li>

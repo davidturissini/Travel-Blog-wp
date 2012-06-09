@@ -52,7 +52,7 @@ Tags: black, blue, white, two-columns, fixed-width, custom-header, custom-backgr
  }
 
 #blog-content .content {
- background:#fff;
+ background:rgba(255,255,255,.85);
  padding:10px;
  overflow-y:scroll;
  left: 20px;
@@ -151,24 +151,26 @@ Tags: black, blue, white, two-columns, fixed-width, custom-header, custom-backgr
  right:5px;
  top:50px;
  width:160px;
- background:rgba(255,255,255,.9);
+ }
+
+#locations-nav header {
+ margin-top:20px;
+ padding:5px 10px;
+ }
+
+#locations-nav header:first-child {
+ margin-top:0px;
+ }
+
+#locations-nav header, #locations-nav ul {
+ background:rgba(255,255,255,.85);
  }
 
 #locations-nav .location {
  display:block;
  font-size:11px;
  padding:5px 10px;
- -webkit-transition:all linear 500ms;
- }
-
-#locations-nav .location.not-visited:hover, #locations-nav .location.selected.not-visited {
- color:#ccc;
- background:#888;
- }
-
-#locations-nav .location.not-visited {
- color:#ccc;
- background:#B0B0B0;
+ -webkit-transition:all linear 200ms;
  }
 
 #locations-nav .location:hover, #locations-nav .location.selected {
