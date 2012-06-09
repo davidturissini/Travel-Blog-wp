@@ -103,7 +103,7 @@
         $imgLink = $( document.createElement("a") ).addClass("photo").attr({title:photo.title,href:photo.url()}).append( $img );
         $(".photos", view.$el).append($imgLink);
        })
-       $(".photos a", view.$el).lightBox();
+       $(".photos a", view.$el).lightBox({imageBtnClose:"/images/lightbox-btn-close.gif"});
        $(".photos", view.$el).slider()
       }})
  
