@@ -94,10 +94,9 @@
        _gaq.push(["_trackEvent", "Location", "Viewed", view.model.get("post_title")])
       }
      },
-     showPhotos: function () {
+     showPhotos: function (photos) {
       var view = this
-      this.model.photos({
-       success:function (photos) { 
+      $(".photos", view.$el).empty()
         $.each(photos, function(idx, photo) {
         var $img = $( document.createElement("img") ).attr({src:photo.thumbnail("s"),height:"75px",width:"75px"}),
         $imgLink = $( document.createElement("a") ).addClass("photo").attr({title:photo.title,href:photo.url()}).append( $img );
@@ -105,13 +104,14 @@
        })
        $(".photos a", view.$el).lightBox({imageBtnClose:"/images/lightbox-btn-close.gif"});
        $(".photos", view.$el).slider()
-      }})
+      
  
      },
      render: function () {
       var view = this,
       loc = this.model,
       options = options || {},
+      locationPhotos = false, journalEntries = false,
       $div = $( document.getElementById("location-html") ).clone().attr({id:null}),
       $content = $(".content", view.el)
       $content.empty()
@@ -120,14 +120,28 @@
       $(".country", $div).text(loc.get("country"));
       $(".description", $div).text(loc.get("post_content"))
       $content.append($div)
-      view.showPhotos() 
+      
+      $(".journal-entries", view.el).addClass("loading")
+      loc.photos({
+        success:function (photos) {
+         locationPhotos = photos
+         if( journalEntries ) { loadingDone() }
+        }
+      })
 
       loc.journal_entries({
        success:function (entries) {
-        view.renderJournalEntries(entries)
+         journalEntries = entries
+         if( locationPhotos ) { loadingDone() }
        }
       })
+      
       view.showHTML()
+      function loadingDone() {  
+       view.renderJournalEntries(journalEntries)
+       view.showPhotos(locationPhotos) 
+       $(".journal-entries", view.el).removeClass("loading")
+      }
      }
     })
 
