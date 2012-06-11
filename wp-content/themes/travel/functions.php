@@ -118,4 +118,33 @@
 
   }
 
+  function renderLocation($location) {
+  ?>
+   <article id="location-html" <?php if($location) { echo "data-id=\"". $location->ID . "\""; } ?>  class="location">
+    <header>
+     <h2 class="title"><?php echo $location->post_title; ?><h2>
+     <h5 class="geo">
+      <span class="city"><?php echo $location->city; ?></span>, <span class="country"><?php echo $location->country; ?></span>
+     </h5>
+    </header>
+    <p class="description"><?php echo $location->post_content; ?></p>
+    <div class="photos">
+
+    </div>
+    <div class="journal-entries">
+      <?php foreach($location->journal_entries() as $entry) { ?>
+       <article class="journal-entry">
+        <h3 class="day"><?php echo $entry->day; ?></h3>
+        <div class="body"><?php echo $entry->post_content; ?></div>
+       </article>
+      <?php } ?>
+      <article class="journal-entry" id="journal-entry-html">
+       <h3 class="day"></h3>
+       <div class="body"></div>
+      </article>
+    </div>
+  </article>
+
+  <?php
+  }
 ?>

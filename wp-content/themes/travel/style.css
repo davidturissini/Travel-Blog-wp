@@ -36,7 +36,7 @@ Tags: black, blue, white, two-columns, fixed-width, custom-header, custom-backgr
  display:block;
  }
 
-#location-html, #journal-entry-html {
+.loading #location-html {
  display:none;
  } 
 
@@ -52,7 +52,7 @@ Tags: black, blue, white, two-columns, fixed-width, custom-header, custom-backgr
  }
 
 #blog-content .content {
- background:rgba(255,255,255,.85);
+ background-color:rgba(255,255,255,.85);
  padding:10px;
  overflow-y:scroll;
  left: 20px;
@@ -139,7 +139,20 @@ Tags: black, blue, white, two-columns, fixed-width, custom-header, custom-backgr
 
 .loading {
  min-height:25px;
- background:url(/wp-content/themes/travel/images/loading.gif) center center no-repeat;
+ background-image:url(/wp-content/themes/travel/images/loading.gif);
+ background-position: center center;
+ background-repeat: no-repeat;
+ position:relative;
+ }
+
+.loading .loading-ui {
+ text-align:center;
+ position:absolute;
+ left:0px;
+ right:0px;
+ bottom:0px;
+ top:0px;
+ font-size:12px;
  }
 
 .location .journal-entry {

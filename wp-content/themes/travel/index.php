@@ -49,36 +49,14 @@
       }
     })
 
-    var JournalEntryView = Backbone.View.extend({
-      model:JournalEntry,
-      render: function () {
-       var journal = this,
-       $div = $( document.getElementById("journal-entry-html") ).clone().attr({id:null})
-       $(".title", $div).html(journal.model.get("post_title"));
-       $(".day", $div).html(journal.model.get("formatted_day"));
-       $(".body", $div).html(journal.model.get("post_content"));
-       return $div.get(0);
-      }
-    })
-
     var LocationShowView = Backbone.View.extend({
      model: Location,
-     initialize: function () {
-       this.journalView = new JournalEntryView()
-     },
      show:function (location) {
       this.model = location
       this.render()
      },
      hide:function () {
       this.$el.css({display:"none"})
-     },
-     renderJournalEntries:function (entries) {
-       var locView = this
-       entries.forEach(function(entry, idx) {
-         var journalView = new JournalEntryView({model:entry})
-         $(".journal-entries", locView.el).append(journalView.render())
-       })
      },
      showHTML: function () {
       var view = this
@@ -102,50 +80,104 @@
         $imgLink = $( document.createElement("a") ).addClass("photo").attr({title:photo.title,href:photo.url()}).append( $img );
         $(".photos", view.$el).append($imgLink);
        })
-       $(".photos a", view.$el).lightBox({imageBtnClose:"/images/lightbox-btn-close.gif"});
+       $(".photos a", view.$el).lightBox({
+        imageBtnClose:"/images/lightbox-btn-close.gif",
+        imageBtnPrev: "/images/lightbox-btn-prev.gif",
+        imageBtnNext: "/images/lightbox-btn-next.gif",
+        imageBlank: "/images/lightbox-blank.gif",
+        imageLoading: "/wp-content/themes/travel/images/loading.gif"
+       });
        $(".photos", view.$el).slider()
-      
  
      },
      render: function () {
       var view = this,
       loc = this.model,
-      options = options || {},
-      locationPhotos = false, journalEntries = false,
-      $div = $( document.getElementById("location-html") ).clone().attr({id:null}),
-      $content = $(".content", view.el)
-      $content.empty()
-      $(".title", $div).text(loc.get("post_title"));
-      $(".city", $div).text(loc.get("city"));
-      $(".country", $div).text(loc.get("country"));
-      $(".description", $div).text(loc.get("post_content"))
-      $content.append($div)
+      $content = $(".content", view.el),
+      $locationHTML = $(".location", $content)
+      locationPhotos = false, 
+      locationHTML = ($locationHTML.length == 1 && $locationHTML.data("id") == loc.id ? $locationHTML.get(0) : false),
+      loadingUI = new LoadingUIView({text:locationHTML ? "Loading photos" : "Loading content"})
+      $content.empty().addClass("loading").append(loadingUI.render())
+      view.showHTML()
+      loadingUI.center()
+      if( !locationHTML ) {
+       $.ajax({
+        url:"/wp-admin/admin-ajax.php",
+        data:{
+         action:"location_html",
+         location_id:loc.get("ID")
+        },
+        success:function (html) {
+         locationHTML = html
+         loadingUI.setText("Loading photos")
+         loadingDone()
+        }
+       })
+      }
       
-      $(".journal-entries", view.el).addClass("loading")
       loc.photos({
         success:function (photos) {
          locationPhotos = photos
-         if( journalEntries ) { loadingDone() }
+         loadingDone()
         }
       })
-
-      loc.journal_entries({
-       success:function (entries) {
-         journalEntries = entries
-         if( locationPhotos ) { loadingDone() }
-       }
-      })
-      
-      view.showHTML()
       function loadingDone() {  
-       view.renderJournalEntries(journalEntries)
+       if( !locationPhotos || !locationHTML ) { return }
+       loadingUI.remove()
+       $content.append(locationHTML).removeClass("loading")
        view.showPhotos(locationPhotos) 
-       $(".journal-entries", view.el).removeClass("loading")
       }
      }
     })
 
+    var LoadingUIView = Backbone.View.extend({
+      el: document.createElement("div"),
+      initialize: function () {
+       this.$el.addClass("loading-ui")
+       this.setText(this.options.text)
+       this.elipsesInterval = null
+      },
+      startElipsesAnimation: function () {
+        var view = this,
+        elipsesMin = view.options.elipsesMin || 0,
+        numElipses = elipsesMin,
+        elipsesLimit = view.options.elipsesLimit || 3
+        this.elipsesInterval = setInterval(function () {
+          var elipses = ""
+          for(var i = 0; i < numElipses; i++) {
+            elipses += "." 
+          }
+          view.$el.text(view.options.text + elipses)
+          if(numElipses == elipsesLimit) {
+           numElipses = elipsesMin 
+          } else {
+           numElipses++
+          }
+        }, 200);
+      },
+      stopElipsesAnimation: function () {
+        clearInterval( this.elipsesInterval )
+      },
+      remove: function () {
+        this.$el.remove()
+        this.stopElipsesAnimation()
+      },
+      setText: function (text) {
+        this.options.text = text
+        this.$el.text(text)
+      },
+      render: function () {
+        this.startElipsesAnimation() 
+        return this.el
+      },
+      center: function () {
+       this.$el.css({margin:this.$el.parents(".loading").height() * .55 + "px auto 0"})
+      }
+    })
+
      var Location = Backbone.Model.extend({
+       idAttribute:"ID",
        initialize: function (json) {
         this.has_visited = json.has_visited == "1"
        },

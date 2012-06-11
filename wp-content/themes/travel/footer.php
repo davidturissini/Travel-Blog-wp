@@ -1,26 +1,9 @@
   <div id="blog-content">
     <a class="close">Return to map</a>
     <div class="content">
- 
+     <?php renderLocation(new Location($post)) ?>
     </div>
   </div>
-  <article id="location-html" class="location">
-    <h2 class="title"><h2>
-    <h5 class="geo">
-      <span class="city"></span>, <span class="country"></span>
-    </h5>
-    <div class="description"></div>
-    <div class="photos">
- 
-    </div>
-    <div class="journal-entries">
-      <article class="journal-entry" id="journal-entry-html">
-       <h3 class="day"></h3>
-       <div class="body"></div>
-      </article>
-    </div>
-  </article>
-
 
 <?php if ( current_user_can('manage_options') ) { ?>
  <div id="edit-mode">
