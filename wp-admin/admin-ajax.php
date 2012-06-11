@@ -26,7 +26,7 @@ do_action('admin_init');
 
 add_action('wp_ajax_save_location', 'save_location_callback');
 add_action('wp_ajax_location_html', 'location_ajax');
-add_action('wp_ajax_nonpriv_location_html', 'location_ajax');
+add_action('wp_ajax_nopriv_location_html', 'location_ajax');
 add_action('wp_ajax_save_journal_entry', 'save_journal_entry');
 add_action('wp_ajax_journal_from_location', 'journal_from_location');
 add_action('wp_ajax_nopriv_journal_from_location', 'journal_from_location');
