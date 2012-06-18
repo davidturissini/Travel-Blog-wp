@@ -1,0 +1,203 @@
+/*
+Theme Name: Melissa and Dave Travel
+Theme URI: http://travel.bytemagik.com/
+Description: Map detailing our travels!
+Author: David Turissinit
+Version: 1
+License: GNU General Public License
+License URI: license.txt
+Tags: black, blue, white, two-columns, fixed-width, custom-header, custom-background, threaded-comments, sticky-post, translation-ready, microformats, rtl-language-support, editor-style, custom-menu
+*/
+   html {
+    width:100%;
+    height:100%;
+   }
+  
+   body { height:100%; width: 100%; padding:0px; margin:0px;font-family:Arial; }
+   div,ul,li,nav,header,h1,h2,h3,h4,h5,h6 { margin:0px; padding:0px; }
+   li { list-style-type:none; }
+   a,a:visited,a:hover { 
+    text-decoration:none;
+    color:#003388; 
+   }
+   #map_canvas {
+    position:fixed !important;
+    width:100%;
+    height:100%;
+   }
+
+.location-form {
+ font-size:12px;
+ color:#666;
+ display:none;
+ }
+
+#map_canvas .location-form {
+ display:block;
+ }
+
+.loading #location-html {
+ display:none;
+ } 
+
+#blog-content {
+ position:fixed;
+ top:0px;
+ left:60px;
+ right:175px;
+ bottom:10px;
+ display:none;
+ padding:20px;
+ z-index:100;
+ }
+
+#blog-content .content {
+ background-color:rgba(255,255,255,.85);
+ padding:10px;
+ overflow-y:scroll;
+ left: 20px;
+ bottom: 20px;
+ top: 20px;
+ right: 0px;
+ position:absolute;
+ }
+
+#blog-content .close {
+ display:block;
+ color:#00f;
+ cursor:pointer;
+ position: absolute;
+ top: 30px;
+ right: 40px;
+ z-index: 120;
+ font-size:12px;
+ }
+
+#blog-content .close:hover {
+ text-decoration:underline;
+ }
+
+.location-form input[type=text] {
+ border:0px;
+ display:inline;
+ width:auto;
+ padding:5px 0px;
+ color:#666;
+ }
+
+.location-form input[value=""] {
+ display:none;
+ }
+
+.location-form input[name=title] {
+ display:block;
+ font-size:16px;
+ width:100%;
+ }
+
+.location-form input[type=text]:active {
+ border:0px;
+ }
+
+#edit-mode {
+ position:fixed;
+ bottom:19px;
+ right:0px;
+ padding:5px;
+ background:rgba(255, 255, 255, .5);
+ }
+
+.location h2 {
+ margin:0px;
+ }
+
+.location .description {
+ margin:10px 0;
+ font-size:12px;
+ }
+
+.location .photos {
+ padding:10px 0;
+ }
+
+.location .photos .photo {
+ display:inline-block;
+ padding-left:10px
+ }
+
+.location .photos .photo:first-child {
+ padding-left:0px;
+ }
+
+.location .geo {
+ margin:0px;
+ }
+
+.location .journal-entries {
+ margin-top:20px;
+ }
+
+.loading {
+ min-height:25px;
+ background-image:url(/wp-content/themes/travel/images/loading.gif);
+ background-position: center center;
+ background-repeat: no-repeat;
+ position:relative;
+ }
+
+.loading .loading-ui {
+ text-align:center;
+ position:absolute;
+ left:0px;
+ right:0px;
+ bottom:0px;
+ top:0px;
+ font-size:12px;
+ }
+
+.location .journal-entry {
+ margin-bottom:20px;
+ }
+
+.location .journal-entry iframe {
+ display:block;
+ margin:10px auto;
+ }
+
+.location .journal-entry .day {
+ font-size:16px;
+ margin-bottom:5px;
+ }
+
+#locations-nav {
+ position:fixed;
+ right:5px;
+ top:50px;
+ width:160px;
+ }
+
+#locations-nav header {
+ margin-top:20px;
+ padding:5px 10px;
+ }
+
+#locations-nav header:first-child {
+ margin-top:0px;
+ }
+
+#locations-nav header, #locations-nav ul {
+ background:rgba(255,255,255,.85);
+ }
+
+#locations-nav .location {
+ display:block;
+ font-size:11px;
+ padding:5px 10px;
+ -webkit-transition:all linear 200ms;
+ }
+
+#locations-nav .location:hover, #locations-nav .location.selected {
+ background:#003044;
+ color:#ccc;
+ }
+
