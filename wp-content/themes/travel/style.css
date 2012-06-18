@@ -176,13 +176,12 @@ Tags: black, blue, white, two-columns, fixed-width, custom-header, custom-backgr
  width:160px;
  }
 
-#locations-nav header {
- margin-top:20px;
- padding:5px 10px;
+#locations-nav ul {
+ display:none;
  }
 
-#locations-nav header:first-child {
- margin-top:0px;
+#locations-nav header {
+ padding:5px 10px;
  }
 
 #locations-nav header, #locations-nav ul {
@@ -193,7 +192,6 @@ Tags: black, blue, white, two-columns, fixed-width, custom-header, custom-backgr
  display:block;
  font-size:11px;
  padding:5px 10px;
- -webkit-transition:all linear 200ms;
  }
 
 #locations-nav .location:hover, #locations-nav .location.selected {
