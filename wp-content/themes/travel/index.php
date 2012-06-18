@@ -27,6 +27,12 @@
     })
 
     var LocationMenu = Backbone.View.extend({
+      expandLocationType:function (locationType) {
+        var $locations = $( this.el.getElementsByTagName("ul") ).filter(function (idx,e) { return $(e).data("post_type") == locationType })
+        $( this.el.getElementsByTagName("ul") ).css({display:"none"})
+        $locations.css({display:"block"})
+        this.options.map.setLocations(this.locations[locationType])
+      },
       render:function () {
        var map = this.options.map,
        $locations = $( this.el.getElementsByClassName("location") )
@@ -51,34 +57,35 @@
          map.router.navigateToLocation(null) 
         }
        })
-      var view = this,
-      locationTypes = ["climbs", "vacations", "drives"]
-      view.locations = {}
-      locationTypes.forEach(function (postType) {
-       view.locations[postType] = new LocationsCollection()
-      })
+       var view = this,
+       locationTypes = ["climbs", "vacations", "drives"]
+       view.locations = {}
+       locationTypes.forEach(function (postType) {
+        view.locations[postType] = new LocationsCollection()
+       })
 
-      $( this.el.getElementsByTagName("header") ).click(function (e) {
+       $( this.el.getElementsByTagName("header") ).click(function (e) {
         var $target = $(e.currentTarget.nextElementSibling)
-        $( view.el.getElementsByTagName("ul") ).css({display:"none"})
-        $target.css({display:"block"})
-        view.options.map.setLocations(view.locations[$target.data("post_type")])
-      })
+        view.expandLocationType($target.data("post_type"))
+       })
 
-      $( this.el.getElementsByClassName("vacation") ).each(function (idx, elem) {
-       var location = new Location( $(elem).data("json") )
-       view.locations.vacations.add(location)
-      })
+       $( this.el.getElementsByClassName("vacation") ).each(function (idx, elem) {
+        var location = new Location( $(elem).data("json") )
+        view.locations.vacations.add(location)
+       })
 
-      $( this.el.getElementsByClassName("climb") ).each(function (idx, elem) {
-       var climb = new Climb( $(elem).data("json") )
-       view.locations.climbs.add(climb)
-      })
+       $( this.el.getElementsByClassName("climb") ).each(function (idx, elem) {
+        var climb = new Climb( $(elem).data("json") )
+        view.locations.climbs.add(climb)
+       })
 
-      $( this.el.getElementsByClassName("drive") ).each(function (idx, elem) {
-       var drive = new Drive( $(elem).data("json") )
-       view.locations.drives.add(drive)
-      })
+       $( this.el.getElementsByClassName("drive") ).each(function (idx, elem) {
+        var drive = new Drive( $(elem).data("json") )
+        view.locations.drives.add(drive)
+       })
+       
+       view.expandLocationType("vacations")
+     
       }
     })
 
