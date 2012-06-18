@@ -209,7 +209,6 @@
       }
     })
 
-
      var Location = Backbone.Model.extend({
        idAttribute:"ID",
        initialize: function (json) {
@@ -304,6 +303,7 @@
          map.router.navigateToLocation(this)
        },
      })
+
      var JournalEntry = Backbone.Model.extend({
        blogHTML: function () {
        }
