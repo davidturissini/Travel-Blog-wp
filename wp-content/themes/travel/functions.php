@@ -94,9 +94,57 @@
       $this->formatted_day = date("l, F d, Y", strtotime($this->day));
     }
   }
-
+  
   class Location extends Content {
- 
+    public static function all($options = array()) {
+      $options = array_merge(array('numberposts' => -1, 'post_type' => "location"), $options);
+      $raw_locations = get_posts( $options );
+      $locations = array();
+      foreach($raw_locations as $location) {
+        $loc = new self($location);
+        $locations[] = $loc;
+      }
+      return $locations;
+    }
+
+    public static function visited($options = array()) {
+      $options = array_merge(array('meta_key' => 'has_visited', 'meta_value' => 1, 'numberposts' => -1, 'post_type' => "location"), $options);
+      $raw_locations = get_posts( $options );
+      $locations = array();
+      foreach($raw_locations as $location) {
+        $loc = new self($location);
+        $locations[] = $loc;
+      }
+      return $locations;
+    }
+
+    public static function non_visited($options = array()) {
+      $options = array_merge(array('meta_key' => 'has_visited', 'meta_value' => 0, 'numberposts' => -1, 'post_type' => "location"), $options);
+      $raw_locations = get_posts( $options );
+      $locations = array();
+      foreach($raw_locations as $location) {
+        $loc = new self($location);
+        $locations[] = $loc;
+      }
+      return $locations;
+    }
+
+    public static function find($id) {
+      $raw_location = get_post( $id );
+      return new self($raw_location);
+    }
+  
+    public function journal_entries( $options = array() ) {
+      if( !$this->journal_entries ) {
+        $this->journal_entries = JournalEntry::by_location($this, $options);
+      }
+      return $this->journal_entries;
+      }
+  
+    public function to_json( $options = array() ) {
+      return parent::to_json($options);
+    }
+
   }
 
   class Vacation extends Location {
